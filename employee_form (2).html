@@ -1,0 +1,837 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>טופס פרטי עובד</title>
+
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Segoe UI', Arial, sans-serif;
+    background: #f5f7fa;
+    color: #1a1a2e;
+    min-height: 100vh;
+    padding: 32px 16px;
+  }
+
+  .page-wrapper {
+    max-width: 760px;
+    margin: 0 auto;
+  }
+
+  .header {
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 60%, #0f3460 100%);
+    border-radius: 16px 16px 0 0;
+    padding: 36px 40px 28px;
+    color: white;
+    text-align: center;
+  }
+
+  .header h1 {
+    font-size: 26px;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+    margin-bottom: 6px;
+  }
+
+  .header p {
+    font-size: 14px;
+    opacity: 0.7;
+  }
+
+  .form-card {
+    background: white;
+    border-radius: 0 0 16px 16px;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.08);
+    padding: 36px 40px;
+  }
+
+  .section-title {
+    font-size: 13px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: #0f3460;
+    margin: 28px 0 16px;
+    padding-bottom: 8px;
+    border-bottom: 2px solid #e8edf5;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .section-title:first-of-type { margin-top: 0; }
+
+  .section-icon {
+    width: 22px;
+    height: 22px;
+    background: #0f3460;
+    border-radius: 6px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    color: white;
+  }
+
+  .field-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+
+  .field-grid.full { grid-template-columns: 1fr; }
+
+  .field {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  label {
+    font-size: 13px;
+    font-weight: 600;
+    color: #374151;
+  }
+
+  input, select {
+    height: 42px;
+    border: 1.5px solid #e2e8f0;
+    border-radius: 8px;
+    padding: 0 12px;
+    font-size: 14px;
+    font-family: inherit;
+    color: #1a1a2e;
+    background: #fafbfd;
+    transition: border-color 0.15s, box-shadow 0.15s;
+    outline: none;
+    width: 100%;
+  }
+
+  input:focus, select:focus {
+    border-color: #0f3460;
+    box-shadow: 0 0 0 3px rgba(15, 52, 96, 0.08);
+    background: white;
+  }
+
+  input::placeholder { color: #aab0bc; }
+
+  .required-star { color: #e24b4a; margin-right: 3px; }
+
+  .sig-section {
+    background: #f8fafc;
+    border: 1.5px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 24px;
+    margin-top: 28px;
+  }
+
+  .sig-label {
+    font-size: 13px;
+    font-weight: 600;
+    color: #374151;
+    margin-bottom: 8px;
+  }
+
+  .sig-subtitle {
+    font-size: 12px;
+    color: #6b7280;
+    margin-bottom: 14px;
+    line-height: 1.5;
+  }
+
+  #signatureCanvas {
+    width: 100%;
+    height: 160px;
+    border: 1.5px solid #d1d5db;
+    border-radius: 8px;
+    background: white;
+    cursor: crosshair;
+    touch-action: none;
+    display: block;
+  }
+
+  #signatureCanvas.signed {
+    border-color: #0f3460;
+  }
+
+  .sig-controls {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 10px;
+  }
+
+  .btn-clear {
+    font-size: 12px;
+    color: #6b7280;
+    background: none;
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+    padding: 6px 14px;
+    cursor: pointer;
+    font-family: inherit;
+    transition: all 0.15s;
+  }
+
+  .btn-clear:hover { background: #f3f4f6; border-color: #9ca3af; }
+
+  .confirm-box {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    background: #eff6ff;
+    border: 1px solid #bfdbfe;
+    border-radius: 10px;
+    padding: 14px 16px;
+    margin-top: 20px;
+  }
+
+  .confirm-box input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    min-width: 18px;
+    margin-top: 1px;
+    accent-color: #0f3460;
+    cursor: pointer;
+  }
+
+  .account-owner-box {
+    background: #f8fafc;
+    border: 1.5px solid #e2e8f0;
+    border-radius: 10px;
+    padding: 16px 18px;
+    margin-top: 16px;
+  }
+
+  .account-owner-label {
+    font-size: 13px;
+    font-weight: 600;
+    color: #374151;
+    margin-bottom: 12px;
+  }
+
+  .radio-group {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+  }
+
+  .radio-option {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+  }
+
+  .radio-option input[type="radio"] {
+    width: 18px;
+    height: 18px;
+    min-width: 18px;
+    accent-color: #0f3460;
+    cursor: pointer;
+  }
+
+  .radio-option label {
+    font-size: 14px;
+    font-weight: 500;
+    color: #1a1a2e;
+    cursor: pointer;
+  }
+
+  .warning-box {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    background: #fffbeb;
+    border: 1.5px solid #fcd34d;
+    border-radius: 10px;
+    padding: 12px 16px;
+    margin-top: 14px;
+  }
+
+  .warning-icon {
+    font-size: 16px;
+    margin-top: 1px;
+    flex-shrink: 0;
+  }
+
+  .warning-box p {
+    font-size: 13px;
+    color: #92400e;
+    line-height: 1.6;
+  }
+
+  .warning-box strong {
+    font-weight: 700;
+  }
+
+  .confirm-box label {
+    font-size: 13px;
+    color: #1e40af;
+    font-weight: 400;
+    line-height: 1.5;
+    cursor: pointer;
+  }
+
+  .btn-submit {
+    width: 100%;
+    height: 52px;
+    background: #0f3460;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    font-size: 16px;
+    font-weight: 700;
+    font-family: inherit;
+    cursor: pointer;
+    margin-top: 28px;
+    transition: background 0.15s, transform 0.1s;
+    letter-spacing: 0.3px;
+  }
+
+  .btn-submit:hover { background: #16213e; }
+  .btn-submit:active { transform: scale(0.99); }
+  .btn-submit:disabled { background: #9ca3af; cursor: not-allowed; }
+
+  .error-msg {
+    display: none;
+    background: #fef2f2;
+    border: 1px solid #fecaca;
+    border-radius: 8px;
+    padding: 12px 16px;
+    font-size: 13px;
+    color: #991b1b;
+    margin-top: 16px;
+    line-height: 1.5;
+  }
+
+  .success-screen {
+    display: none;
+    text-align: center;
+    padding: 60px 40px;
+  }
+
+  .success-icon {
+    width: 72px;
+    height: 72px;
+    background: #d1fae5;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 20px;
+    font-size: 32px;
+  }
+
+  .success-screen h2 {
+    font-size: 22px;
+    color: #065f46;
+    margin-bottom: 8px;
+  }
+
+  .success-screen p {
+    font-size: 14px;
+    color: #6b7280;
+  }
+
+  .form-101-screen {
+    text-align: center;
+    padding: 20px 0 10px;
+  }
+
+  .form-101-screen h2 {
+    font-size: 20px;
+    color: #1a1a2e;
+    margin-bottom: 10px;
+    font-weight: 700;
+  }
+
+  .form-101-screen p {
+    font-size: 14px;
+    color: #6b7280;
+    line-height: 1.6;
+    margin-bottom: 24px;
+  }
+
+  .radio-101 {
+    display: flex;
+    gap: 16px;
+    justify-content: center;
+    margin-bottom: 28px;
+    flex-wrap: wrap;
+  }
+
+  .radio-101-option {
+    flex: 1;
+    min-width: 140px;
+    max-width: 200px;
+    border: 2px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 18px 12px;
+    cursor: pointer;
+    transition: all 0.15s;
+    background: #fafbfd;
+    text-align: center;
+  }
+
+  .radio-101-option:hover {
+    border-color: #0f3460;
+    background: #eff6ff;
+  }
+
+  .radio-101-option input[type=radio] {
+    display: none;
+  }
+
+  .radio-101-option.selected {
+    border-color: #0f3460;
+    background: #eff6ff;
+  }
+
+  .radio-101-option .option-icon {
+    font-size: 28px;
+    display: block;
+    margin-bottom: 8px;
+  }
+
+  .radio-101-option .option-label {
+    font-size: 15px;
+    font-weight: 600;
+    color: #1a1a2e;
+  }
+
+  .alert-101 {
+    display: none;
+    background: #fef2f2;
+    border: 2px solid #fca5a5;
+    border-radius: 12px;
+    padding: 20px 24px;
+    margin-top: 8px;
+    text-align: right;
+  }
+
+  .alert-101 h3 {
+    font-size: 16px;
+    color: #991b1b;
+    margin-bottom: 8px;
+    font-weight: 700;
+  }
+
+  .alert-101 p {
+    font-size: 14px;
+    color: #7f1d1d;
+    line-height: 1.6;
+    margin-bottom: 14px;
+  }
+
+  .btn-101 {
+    display: inline-block;
+    background: #0f3460;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 10px 24px;
+    font-size: 14px;
+    font-weight: 700;
+    font-family: inherit;
+    cursor: pointer;
+    text-decoration: none;
+    transition: background 0.15s;
+  }
+
+  .btn-101:hover { background: #16213e; }
+
+  .success-101 {
+    display: none;
+    background: #f0fdf4;
+    border: 2px solid #86efac;
+    border-radius: 12px;
+    padding: 16px 20px;
+    margin-top: 8px;
+    text-align: center;
+  }
+
+  .success-101 p {
+    font-size: 14px;
+    color: #166534;
+    font-weight: 600;
+    margin: 0;
+  }
+
+  .btn-continue-101 {
+    width: 100%;
+    height: 52px;
+    background: #0f3460;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    font-size: 16px;
+    font-weight: 700;
+    font-family: inherit;
+    cursor: pointer;
+    margin-top: 8px;
+    display: none;
+    transition: background 0.15s;
+  }
+
+  .btn-continue-101:hover { background: #16213e; }
+
+  @media (max-width: 560px) {
+    .field-grid { grid-template-columns: 1fr; }
+    .form-card, .header { padding: 24px 20px; }
+    .header h1 { font-size: 21px; }
+  }
+</style>
+</head>
+<body>
+<div class="page-wrapper">
+  <div class="header">
+    <h1>טופס פרטי עובד</h1>
+    <p>מלא את כל הפרטים ואשר בחתימה בסוף הטופס</p>
+  </div>
+
+  <div class="form-card">
+    <!-- מסך בדיקת טופס 101 -->
+    <div id="screen101">
+      <div class="form-101-screen">
+        <h2>לפני שממשיכים...</h2>
+        <p>טופס 101 הוא טופס חובה למס הכנסה.<br>יש למלא אותו לפני מסירת פרטי חשבון הבנק.</p>
+      </div>
+
+      <div class="radio-101" id="radio101group">
+        <div class="radio-101-option" id="opt101yes" onclick="select101(true)">
+          <span class="option-icon">✅</span>
+          <span class="option-label">כן, מילאתי טופס 101</span>
+        </div>
+        <div class="radio-101-option" id="opt101no" onclick="select101(false)">
+          <span class="option-icon">❌</span>
+          <span class="option-label">לא מילאתי עדיין</span>
+        </div>
+      </div>
+
+      <div class="alert-101" id="alert101">
+        <h3>⚠️ חובה למלא טופס 101 לפני המשך!</h3>
+        <p>
+          טופס 101 הוא טופס חובה על פי חוק מס הכנסה.<br>
+          ללא מילוי הטופס לא ניתן לעבד את שכרך.<br>
+          אנא מלא את הטופס ואז חזור להשלים את הרישום.
+        </p>
+        <a class="btn-101" href="https://tpz.link/tmhxc" target="_blank">למילוי טופס 101 ←</a>
+      </div>
+
+      <div class="success-101" id="success101">
+        <p>✅ מעולה! ממשיכים למילוי פרטי חשבון הבנק</p>
+      </div>
+
+      <button class="btn-continue-101" id="btnContinue101" onclick="continueToForm()">המשך למילוי הטופס ←</button>
+    </div>
+
+    <div id="formContent" style="display:none;">
+
+      <div class="section-title">
+        <span class="section-icon">👤</span> פרטים אישיים
+      </div>
+
+      <div class="field-grid">
+        <div class="field">
+          <label>שם פרטי <span class="required-star">*</span></label>
+          <input type="text" id="firstName" placeholder="ישראל">
+        </div>
+        <div class="field">
+          <label>שם משפחה <span class="required-star">*</span></label>
+          <input type="text" id="lastName" placeholder="ישראלי">
+        </div>
+        <div class="field">
+          <label>תעודת זהות <span class="required-star">*</span></label>
+          <input type="text" id="idNumber" placeholder="000000000" maxlength="9">
+        </div>
+        <div class="field">
+          <label>תאריך לידה <span class="required-star">*</span></label>
+          <input type="date" id="birthDate">
+        </div>
+        <div class="field">
+          <label>טלפון נייד <span class="required-star">*</span></label>
+          <input type="tel" id="phone" placeholder="05X-XXXXXXX">
+        </div>
+        <div class="field">
+          <label>כתובת אימייל <span class="required-star">*</span></label>
+          <input type="email" id="email" placeholder="name@example.com">
+        </div>
+      </div>
+
+      <div class="field-grid" style="margin-top:16px;">
+        <div class="field">
+          <label>כתובת מגורים</label>
+          <input type="text" id="address" placeholder="רחוב, מספר, עיר">
+        </div>
+        <div class="field">
+          <label>סניף <span class="required-star">*</span></label>
+          <select id="branch">
+            <option value="">-- בחר סניף --</option>
+            <option>ראשון לציון</option>
+            <option>אשדוד</option>
+            <option>תל אביב</option>
+            <option>רחובות</option>
+            <option>כפר סבא</option>
+            <option>נתניה</option>
+            <option>אשקלון</option>
+            <option>חיפה</option>
+            <option>אחר (אירוע / הקמה)</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="section-title" style="margin-top:28px;">
+        <span class="section-icon">🏦</span> פרטי חשבון בנק
+      </div>
+
+      <div class="field-grid">
+        <div class="field">
+          <label>שם הבנק <span class="required-star">*</span></label>
+          <select id="bankName">
+            <option value="">-- בחר בנק --</option>
+            <option>בנק הפועלים</option>
+            <option>בנק לאומי</option>
+            <option>בנק דיסקונט</option>
+            <option>בנק מזרחי טפחות</option>
+            <option>הבנק הבינלאומי</option>
+            <option>בנק יהב</option>
+            <option>בנק אוצר החייל</option>
+            <option>בנק מרכנתיל דיסקונט</option>
+            <option>בנק One Zero</option>
+            <option>אחר</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>מספר סניף <span class="required-star">*</span></label>
+          <input type="text" id="branchNumber" placeholder="000">
+        </div>
+        <div class="field">
+          <label>מספר חשבון <span class="required-star">*</span></label>
+          <input type="text" id="accountNumber" placeholder="000000000">
+        </div>
+        <div class="field">
+          <label>שם בעל החשבון <span class="required-star">*</span></label>
+          <input type="text" id="accountHolder" placeholder="כפי שמופיע בבנק">
+        </div>
+      </div>
+
+      <!-- בעלות על החשבון -->
+      <div class="account-owner-box">
+        <div class="account-owner-label">החשבון שייך ל: <span class="required-star">*</span></div>
+        <div class="radio-group">
+          <div class="radio-option">
+            <input type="radio" name="accountOwner" id="ownerSelf" value="העובד עצמו">
+            <label for="ownerSelf">העובד עצמו</label>
+          </div>
+          <div class="radio-option">
+            <input type="radio" name="accountOwner" id="ownerMother" value="אם העובד">
+            <label for="ownerMother">אם העובד</label>
+          </div>
+          <div class="radio-option">
+            <input type="radio" name="accountOwner" id="ownerFather" value="אב העובד">
+            <label for="ownerFather">אב העובד</label>
+          </div>
+        </div>
+        <div class="warning-box">
+          <span class="warning-icon">⚠️</span>
+          <p><strong>שים לב:</strong> ניתן למסור פרטי חשבון בנק של העובד עצמו בלבד, או של אחד ההורים. <strong>אין לספק פרטי חשבון של כל אדם אחר.</strong> מסירת פרטים שגויים עלולה לגרום לעיכוב בתשלום השכר.</p>
+        </div>
+      </div>
+
+      <!-- תאריך תחילת עבודה -->
+      <div class="field-grid" style="margin-top:20px;">
+        <div class="field">
+          <label>תאריך תחילת עבודה</label>
+          <input type="date" id="startDate">
+        </div>
+      </div>
+
+      <!-- חתימה -->
+      <div class="sig-section">
+        <div class="sig-label">חתימה דיגיטלית <span class="required-star">*</span></div>
+        <div class="sig-subtitle">
+          על ידי חתימתך אתה מאשר שהפרטים שמסרת נכונים ומדויקים.<br>
+          חתום עם העכבר או באצבע על המסך.
+        </div>
+        <canvas id="signatureCanvas" width="680" height="160"></canvas>
+        <div class="sig-controls">
+          <button class="btn-clear" onclick="clearSignature()">נקה חתימה</button>
+        </div>
+      </div>
+
+      <div class="confirm-box">
+        <input type="checkbox" id="confirmCheck">
+        <label for="confirmCheck">
+          אני מאשר/ת כי הפרטים שמסרתי בטופס זה הינם נכונים, מדויקים ומעודכנים, ואני מסכים/ה כי ישמשו לצורכי שכר ותשלום.
+        </label>
+      </div>
+
+      <div class="error-msg" id="errorMsg"></div>
+
+      <button class="btn-submit" id="submitBtn" onclick="submitForm()">✓ אשר ושלח פרטים</button>
+    </div>
+
+    <!-- מסך הצלחה -->
+    <div class="success-screen" id="successScreen">
+      <div class="success-icon">✓</div>
+      <h2>הטופס הוגש בהצלחה!</h2>
+      <p>הפרטים נשלחו בצורה מאובטחת. תודה!</p>
+    </div>
+  </div>
+</div>
+
+<script>
+// --- טופס 101 ---
+function select101(filled) {
+  document.getElementById('opt101yes').classList.remove('selected');
+  document.getElementById('opt101no').classList.remove('selected');
+  document.getElementById('alert101').style.display = 'none';
+  document.getElementById('success101').style.display = 'none';
+  document.getElementById('btnContinue101').style.display = 'none';
+
+  if (filled) {
+    document.getElementById('opt101yes').classList.add('selected');
+    document.getElementById('success101').style.display = 'block';
+    document.getElementById('btnContinue101').style.display = 'block';
+  } else {
+    document.getElementById('opt101no').classList.add('selected');
+    document.getElementById('alert101').style.display = 'block';
+  }
+}
+
+function continueToForm() {
+  document.getElementById('screen101').style.display = 'none';
+  document.getElementById('formContent').style.display = 'block';
+}
+
+// ============================================================
+// ← הכנס כאן את ה-URL שתקבל מ-Apps Script אחרי הפרסום
+const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyKwsk0F5D44YOuMgaWRpEZ5Y-ybg3lKybxSP9eKiN2AXx71WSlmyY8Oi0I9wHVTUjgIQ/exec';
+// ============================================================
+
+const canvas = document.getElementById('signatureCanvas');
+const ctx = canvas.getContext('2d');
+let drawing = false;
+let hasSig = false;
+
+function resizeCanvas() {
+  const rect = canvas.parentElement.getBoundingClientRect();
+  const dpr = window.devicePixelRatio || 1;
+  const w = rect.width - 48;
+  canvas.width = w * dpr;
+  canvas.height = 160 * dpr;
+  canvas.style.width = w + 'px';
+  canvas.style.height = '160px';
+  ctx.scale(dpr, dpr);
+  ctx.strokeStyle = '#1a1a2e';
+  ctx.lineWidth = 2.2;
+  ctx.lineCap = 'round';
+  ctx.lineJoin = 'round';
+}
+
+resizeCanvas();
+
+function getPos(e) {
+  const r = canvas.getBoundingClientRect();
+  const src = e.touches ? e.touches[0] : e;
+  return { x: src.clientX - r.left, y: src.clientY - r.top };
+}
+
+canvas.addEventListener('mousedown', e => { drawing = true; const p = getPos(e); ctx.beginPath(); ctx.moveTo(p.x, p.y); });
+canvas.addEventListener('mousemove', e => { if (!drawing) return; const p = getPos(e); ctx.lineTo(p.x, p.y); ctx.stroke(); hasSig = true; canvas.classList.add('signed'); });
+canvas.addEventListener('mouseup', () => drawing = false);
+canvas.addEventListener('mouseleave', () => drawing = false);
+canvas.addEventListener('touchstart', e => { e.preventDefault(); drawing = true; const p = getPos(e); ctx.beginPath(); ctx.moveTo(p.x, p.y); }, { passive: false });
+canvas.addEventListener('touchmove', e => { e.preventDefault(); if (!drawing) return; const p = getPos(e); ctx.lineTo(p.x, p.y); ctx.stroke(); hasSig = true; canvas.classList.add('signed'); }, { passive: false });
+canvas.addEventListener('touchend', () => drawing = false);
+
+function clearSignature() {
+  const dpr = window.devicePixelRatio || 1;
+  ctx.clearRect(0, 0, canvas.width / dpr, canvas.height / dpr);
+  hasSig = false;
+  canvas.classList.remove('signed');
+}
+
+function val(id) { return document.getElementById(id).value.trim(); }
+
+function showError(msg) {
+  const el = document.getElementById('errorMsg');
+  el.textContent = msg;
+  el.style.display = 'block';
+  el.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+
+function hideError() { document.getElementById('errorMsg').style.display = 'none'; }
+
+async function submitForm() {
+  hideError();
+
+  const required = [
+    ['firstName', 'שם פרטי'],
+    ['lastName', 'שם משפחה'],
+    ['idNumber', 'תעודת זהות'],
+    ['birthDate', 'תאריך לידה'],
+    ['phone', 'טלפון'],
+    ['email', 'אימייל'],
+    ['bankName', 'שם הבנק'],
+    ['branchNumber', 'מספר סניף'],
+    ['accountNumber', 'מספר חשבון'],
+    ['accountHolder', 'שם בעל החשבון'],
+    ['branch', 'סניף'],
+  ];
+
+  for (const [id, label] of required) {
+    if (!val(id)) return showError('שדה חובה חסר: ' + label);
+  }
+
+  if (!hasSig) return showError('יש לחתום בתיבת החתימה לפני שליחת הטופס.');
+  if (!document.getElementById('confirmCheck').checked) return showError('יש לאשר את הצהרת הדיוק לפני שליחת הטופס.');
+
+  const ownerRadio = document.querySelector('input[name="accountOwner"]:checked');
+  if (!ownerRadio) return showError('יש לסמן את בעלות החשבון (העובד / אב / אם).');
+
+  const btn = document.getElementById('submitBtn');
+  btn.disabled = true;
+  btn.textContent = '⏳ שולח...';
+
+  const now = new Date();
+  const payload = {
+    timestamp: now.toLocaleString('he-IL'),
+    firstName: val('firstName'),
+    lastName: val('lastName'),
+    idNumber: val('idNumber'),
+    birthDate: val('birthDate'),
+    phone: val('phone'),
+    email: val('email'),
+    address: val('address'),
+    bankName: val('bankName'),
+    branchNumber: val('branchNumber'),
+    accountNumber: val('accountNumber'),
+    accountHolder: val('accountHolder'),
+    accountOwner: ownerRadio.value,
+    startDate: val('startDate'),
+    branch: val('branch'),
+    signature: canvas.toDataURL('image/png')
+  };
+
+  try {
+    await fetch(SCRIPT_URL, {
+      method: 'POST',
+      mode: 'no-cors',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    });
+    document.getElementById('formContent').style.display = 'none';
+    document.getElementById('successScreen').style.display = 'block';
+  } catch (err) {
+    btn.disabled = false;
+    btn.textContent = '✓ אשר ושלח פרטים';
+    showError('שגיאה בשליחה. אנא נסה שוב או פנה למנהל.');
+  }
+}
+</script>
+</body>
+</html>
